@@ -1,0 +1,431 @@
+=================================================Start SearchByFieldController========================================================
+@isTest
+public class Test_SearchbyFieldController{
+    static TestMethod Void SearchController(){
+        Contact con = new Contact(lastname='Tabitha',email='tabitha@gmail.com');
+        insert con;
+        system.assertEquals('Tabitha', con.lastname);
+        Institute__c ins = new Institute__c(name='Harvard',Billing_Contact_Name__c='ABC', Billing_Email__c='abc@abc.com', Bill_To_Name__c='ABC',Email_Id__c='harvard@gamil.com',Country__c='USA',Courses_Offered__c='PostGraduation');
+        insert ins;
+        Course__c c1=new Course__c(name='Course',Course_Fee__c=100000,University__c=ins.id,Type__C='PostGraduation',Department__c='CSE',Intake_Season__c='Spring;fall');
+        Course__c c2 = new Course__c(name='Course',Course_Fee__c=200000,University__c=ins.id,Type__C='PostGraduation',Department__c='CSE',Intake_Season__c='Spring;fall');
+        Course__c c7=new Course__c(name='Course',University__c=ins.id,Course_Fee__c=300000,Type__C='PostGraduation',Department__c='CSE',Intake_Season__c='Spring;fall');
+        Course__c c4 = new Course__c(name='Course',University__c=ins.id,Course_Fee__c=400000,Type__C='PostGraduation',Department__c='CSE',Intake_Season__c='Spring;fall');
+        Course__c c5=new Course__c(name='Course',University__c=ins.id,Course_Fee__c=500000,Type__C='PostGraduation',Department__c='CSE',Intake_Season__c='Spring;fall');
+        Course__c c6 = new Course__c(name='Course',University__c=ins.id,Course_Fee__c=400000,Type__C='PostGraduation',Department__c='CSE',Intake_Season__c='Spring;fall');
+        insert c1;insert c7;insert c4;
+        insert c2;insert c5;insert c6;
+        List<Course__c> cl = new List<Course__c>{c1,c2,c7,c4,c5,c6};
+            Course__c c3 = new Course__c(name='Course',University__c=ins.id,Type__C='PostGraduation',Department__c='CSE',Intake_Season__c='Spring');
+        ApexPages.standardController st = new ApexPages.StandardController(con);       
+        SearchbyFieldController sbfc = new SearchByFieldController(st);
+        PreSearchController psc = new PreSearchController (st);
+        
+        string courseJSON=sbfc.getCourseJSON();
+        list<SelectOption>coursetyp=sbfc.getCourseTypePicklist();
+        list<SelectOption>department=sbfc.getDepartmentPicklist();
+        list<SelectOption>country=sbfc.getCountryPicklist();
+        list<SelectOption>curre=sbfc.getCurrencies();
+        string instituteJSON=sbfc.getInstituteJSON();
+        
+        list<SelectOption>coursetyp1=psc.getCourseTypePicklist();
+        list<SelectOption>department1=psc.getDepartmentPicklist();
+        list<SelectOption>country1=psc.getCountryPicklist();
+        list<SelectOption>curre1=psc.getCurrencies();
+        string instituteJSON1=psc.getInstituteJSON();
+        
+        sbfc.CourseNameInput='Course';
+        //sbfc.PriceFrom='500000';
+        //sbfc.PriceTo = '700000';
+        sbfc.InstiuteIdInput=ins.id;
+        sbfc.CourseTypeInput= 'PostGraduation';
+        sbfc.CourseDepartMentInput='CSE';
+        //sbfc.op.Intake_season__c='spring';
+        sbfc.CountryInput='USA';
+        //sbfc.op.Course_Duration__c = 24;
+        //sbfc.op=c3;
+        sbfc.PriceFromInput='100000';
+        sbfc.PriceToInput='500000';
+        sbfc.Search();
+        
+        sbfc.firstpagev();
+        
+        sbfc.nextpage();
+        sbfc.previouspage();
+        sbfc.Lastpage();    
+        system.debug('=============>Count===========>'+sbfc.count );
+        
+        sbfc.detalipage();
+        sbfc.SendEmail();
+        sbfc.Createapplication();
+        sbfc.getSelectedCount();
+        sbfc.leftselected = new List<String>();
+        sbfc.leftselected.add('Fall');
+        sbfc.rightselected = new List<String>();
+        sbfc.rightselected.add('Spring');
+        sbfc.selectclick();
+        sbfc.unselectclick();
+        sbfc.getunSelectedValues();
+        sbfc.getSelectedValues();
+        sbfc.checkSelIds();
+        sbfc.freesearch();
+        sbfc.getCourses();
+        sbfc.RefreshPage();
+        integer pg = sbfc.pagesize;
+        sbfc.RefreshCourses(pg);
+        sbfc.sendExcelattchment();
+        sbfc.SendEmailexcel();
+        sbfc.Back();
+        sbfc.getPageNumbervalue();
+        sbfc.getTotalPages();
+        sbfc.reset();
+        
+        // presearch controller 
+        psc.CourseNameInput='Course';
+        psc.InstiuteIdInput=ins.id;
+        psc.CourseTypeInput= 'PostGraduation';
+        psc.CourseDepartMentInput='CSE';
+        //sbfc.op.Intake_season__c='spring';
+        psc.CountryInput='USA';
+        //sbfc.op.Course_Duration__c = 24;
+        //sbfc.op=c3;
+        psc.PriceFromInput='100000';
+        psc.PriceToInput='500000';
+        psc.Search();
+        
+        psc.firstpagev();
+        
+        psc.nextpage();
+        psc.previouspage();
+        psc.Lastpage();    
+        system.debug('=============>Count===========>'+psc.count );
+        
+        psc.detalipage();
+        psc.SendEmail();
+        psc.Createapplication();
+        psc.getSelectedCount();
+        psc.leftselected = new List<String>();
+        psc.leftselected.add('Fall');
+        psc.rightselected = new List<String>();
+        psc.rightselected.add('Spring');
+        psc.selectclick();
+        psc.unselectclick();
+        psc.getunSelectedValues();
+        psc.getSelectedValues();
+        psc.checkSelIds();
+        psc.freesearch();
+        psc.getCourses();
+        psc.RefreshPage();
+        integer pg1 = psc.pagesize;
+        psc.RefreshCourses(pg1);
+        psc.sendExcelattchment();
+        psc.SendEmailexcel();
+        psc.Back();
+        psc.getPageNumbervalue();
+        psc.getTotalPages();
+        psc.reset();
+    }
+        
+    
+}
+=================================================End SearchByFieldController========================================================
+
+
+
+
+=================================================Start  FreeSearchController========================================================
+@IsTest
+Public class Test_FreeSearchController {
+    Static TestMethod Void TestFreeSearchController() {
+        Institute__c ins = new Institute__c(name = 'SKU',Billing_Contact_Name__c='ABC', Billing_Email__c='abc@abc.com', Bill_To_Name__c='ABC', Country__c='USA',Email_Id__c = 'sku@sku.com');
+        Insert ins;
+        system.assertEquals('SKU', ins.Name);
+        Course__c course1 = new Course__c(University__c = ins.id, name = 'SKUCourse', Course_Fee__c = 50000);
+        Course__c course2 = new Course__c(University__c = ins.id, name = 'SKUCourse test', Course_Fee__c = 50000);
+        Course__c course3 = new Course__c(University__c = ins.id, name = 'SKUCourse test three', Course_Fee__c = 50000);
+        Insert course1;
+        insert course2;
+        insert course3;
+        Configure__c cf = new Configure__c(name='CourseInfo Replyto',Reply_To__c='tabitha@dhruvsoft.com');insert cf;
+        contact con = new contact(lastname = 'test', email = 'test@asd.com');
+        insert con;
+        ApexPages.StandardController StdCtrl = new ApexPages.StandardController(con);
+        FreeSearchController Ctrl = new FreeSearchController(StdCtrl);
+        Ctrl.freesearch = 'SKU';
+        ctrl.selectedIds.add(Course1.Id);
+        ctrl.selectedIds.add(Course2.Id);
+        Ctrl.selectedIds.add(Course3.Id);
+
+        Ctrl.btn=false;
+        ctrl.sendmail=true;
+        Ctrl.fileId='';
+        Ctrl.filename='';
+        Ctrl.showtable=true;
+        Ctrl.msg='success';
+        Ctrl.displaycoursedetalis();
+        Ctrl.detalipage();
+        ctrl.RefreshPage();
+        ctrl.pagenumber = 1;
+        ctrl.offsetsize = 0;
+        Ctrl.pagesize = 1;
+        Ctrl.Cour_hasNext=true;
+        Ctrl.next();
+        ctrl.Cour_hasPrevious=true;
+        ctrl.previous();
+        ctrl.first();
+        Ctrl.Last();
+       // ctrl.RefreshCourses(ctrl.pagesize, ctrl.offsetsize);
+        ctrl.contextItem = course1.id;
+        ctrl.getPageNumber();
+        ctrl.getTotalPages();
+
+        System.assertEquals(3, ctrl.getTotalPages());
+
+        ctrl.searchbyfileds();
+        ctrl.validate();
+        ctrl.Createapplication();
+        ctrl.isLlightening = true;
+        ctrl.SendEmail();
+        Ctrl.displaycoursedetalis();
+        Ctrl.cancel1();
+
+        ctrl.freesearch='abcd';
+        ctrl.displaycoursedetalis();
+        ctrl.cancel1();
+        ctrl.freesearch='SKUCourse';
+        ctrl.displaycoursedetalis();
+        ctrl.freesearch ='';
+        ctrl.displaycoursedetalis();
+        ctrl.freesearch = '50000';
+        ctrl.displaycoursedetalis();
+        
+    }
+      Static TestMethod Void TestFreeSearch() {
+      Institute__c ins = new Institute__c(name = 'SKU',Billing_Contact_Name__c='ABC', Billing_Email__c='abc@abc.com', Bill_To_Name__c='ABC', Country__c='USA',Email_Id__c = 'sku@sku.com');
+        Insert ins;
+        system.assertEquals('SKU', ins.Name);
+        Course__c course1 = new Course__c(University__c = ins.id, name = 'SKUCourse', Course_Fee__c = 50000);
+        Course__c course2 = new Course__c(University__c = ins.id, name = 'SKUCourse test', Course_Fee__c = 50000);
+        Course__c course3 = new Course__c(University__c = ins.id, name = 'SKUCourse test three', Course_Fee__c = 50000);
+        Insert course1;
+        insert course2;
+        insert course3;
+
+        contact con = new contact(lastname = 'test',email ='test@test.com');
+        insert con;
+        ApexPages.StandardController StdCtrl = new ApexPages.StandardController(con);
+        FreeSearchController Ctrl = new FreeSearchController(StdCtrl);
+        Ctrl.freesearch = 'SKU';
+       
+         ctrl.SendEmail();
+          ctrl.Createapplication();
+         
+      }
+    
+}
+
+=================================================End  FreeSearchController========================================================
+
+=================================================Start   Test_DMLCheck========================================================
+@isTest
+public class Test_DMLCheck
+{
+    Public Static TestMethod void DMLCheck()
+    {
+       
+        Contact con=new Contact();
+        con.lastName='TestRec';
+        System.assertEquals('TestRec', con.lastName);
+        DMLCheck.insertRec(con, new list<String>{'LastName','email','Description'});
+        DMLCheck.insertRec(new list<Contact>{con});
+        DMLCheck.insertRec(new list<Contact>{con},new list<String>{'LastName','email','Description'});
+        DMLCheck.insertRec(con);
+        
+        DMLCheck.UpdateRec(con, new list<String>{'LastName','email','Description'});
+        DMLCheck.UpdateRec(new list<Contact>{con});
+        DMLCheck.UpdateRec(new list<Contact>{con},new list<String>{'LastName','email','Description'});        
+        DMLCheck.UpdateRec(con);  
+        
+        DMLCheck.DeleteRec(con);
+        DMLCheck.DeleteRec(new list<Contact>{con});
+        
+        
+    }
+    public static testMethod void testRunAs() {
+    
+        // Setup test data
+        // This code runs as the system user
+        Profile p = [SELECT Id FROM Profile WHERE Name='Standard User']; 
+        User u = new User(Alias = 'dup', Email='dupadauser@testorg.com', 
+            EmailEncodingKey='UTF-8', LastName='Testdup', LanguageLocaleKey='en_US', 
+            LocaleSidKey='en_US', ProfileId = p.Id, 
+            TimeZoneSidKey='America/Los_Angeles', UserName='dupadauser@testorg.com');
+
+        System.runAs(u) {
+            Application__c ap=new Application__c();
+            Contact con=new Contact();
+            // for insert
+            try
+            {
+                DMLCheck.insertRec(new list<Application__c>{ap},new list<String>{'Status__c'});
+            }
+            catch(Exception e)
+            {
+                System.assertEquals(true, e.getMessage().contains('Access Denied'));
+            }
+            // for update
+            try
+            {
+                DMLCheck.UpdateRec(new list<Application__c>{ap},new list<String>{'Status__c'});
+            }
+            catch(Exception e)
+            {
+                System.assertEquals(true, e.getMessage().contains('Access Denied'));
+            }
+            // for delete
+            try
+            {
+                DMLCheck.DeleteRec(ap);
+            }
+            catch(Exception e)
+            {
+                System.assertEquals(true, e.getMessage().contains('Access Denied'));
+            }
+            // below try is for update filed exception
+            try
+            {
+                DMLCheck.insertRec(con,new list<String>{'Comments__c'});
+            }
+            Catch(Exception e)
+            {
+                System.assertEquals(true, e.getMessage().contains('Access Denied'));
+            }
+        }
+    }
+    static testmethod void DMLCheckException()
+    {
+        DMLCheckException dmce=new DMLCheckException();
+        SObjectType  SobjType;
+        dmce.objType = SobjType;
+        dmce.DmlType = 'INSERT';
+        System.assertEquals('INSERT', dmce.DmlType);
+    }
+}
+
+=================================================End   Test_DMLCheck========================================================
+
+
+
+=================================================Start   CurrencySymbolCls========================================================
+
+
+
+@isTest
+public class Test_Utility
+{
+    static TestMethod void CurrencySymbolCls(){
+        List<string> currencies = new List<String>{'ANG','ARS','AUD','AWG','BAM','BBD','BMD','BND','BOB','BRL','BSD','BWP','BYR','BZD','CAD','CHF','CLP','CNY','COP','CRC','CZK','DKK','DOP','EEK','EGP','EUR','FJD',
+        'FKP','GBP','GGP','GHC','GIP','GTQ','GYD','HKD','HNL','HRK','HUF','IDR','IMP','INR','ISK','JEP','JMD','JPY','KYD','LBP','LRD','LTL','LVL','MXN','MYR','MZN','NAD',
+        'NIO','NOK','NZD','PAB','PEN','PHP','PLN','PYG','RON','SBD','SEK','SGD','SHP','SOS','SRD','SVC','SYP','TRL','TRY','TTD','TVD','TWD','UYU','VEF','XCD','ZAR','ZWD'};
+            for(string s : currencies){
+                CurrencySymbolCls.currencySymbol(s);
+            }
+            system.assert(currencies.size()>0);
+    }
+    static TestMethod void LookupValuesCtrl()
+    {
+        Agent__c agent=new Agent__c(Contact_Agent__c=true,University_Agent__c=true,Travel_Agent__c=true,Visa_Agent__c=true,Name='AgentName',Email__c='Agentemail@email.com', Phone__c='9874563210',Primary_Contact_Email__c='pemail@email.com',Primary_Contact_Mobile__c='9874563210',Primary_Contact_Name__c='pcontName',Bill_To_Name__c='Bname',Billing_Contact_Name__c='BcontctName',Billing_Email__c='Bemail@email.com');
+        insert agent;
+        system.assertEquals('AgentName', agent.Name);
+        //if type = application
+        Institute__c ins=new Institute__c(name='SKU',Email_Id__c='sku@sku.com',Billing_Contact_Name__c='SKUContact',Billing_Email__c='sku@sku.com',Bill_To_Name__c='SKU');
+        Insert ins;
+        Course__c course=new Course__c(University__c=ins.id,name='SKUCourse',Credits__c='2');
+        Insert course;
+        contact con=new Contact(lastname='TestContact',email='testemail@gmail.com');
+        insert con;  
+        id recid = Schema.SObjectType.Application__c.getRecordTypeInfosByName().get('Education').getRecordTypeId();
+        Application__c app=new Application__c(Contact__c=con.id,University__c=ins.Id,Course__c=course.Id,RecordTypeId=recid);
+        Insert app;
+        Application__c app2=new Application__c(Contact__c=con.id,University__c=ins.Id,Course__c=course.Id,RecordTypeId=recid);
+        Insert app2;
+        // for application
+        Test.setCurrentPageReference(new PageReference('Page.LookUpPage')); 
+        System.currentPageReference().getParameters().put('type', 'Application');
+        System.currentPageReference().getParameters().put('AgentID', agent.id);
+        System.currentPageReference().getParameters().put('ObjNm', Commission__c.getSObjectType().getDescribe().getName());
+        LookupValuesCtrl Ctrl=new LookupValuesCtrl();
+        Ctrl.SearchStr = 'A';
+        Ctrl.runQuery();
+        Ctrl.getRexDataList();
+        Ctrl.getFormTag();
+        Ctrl.getTextBox();
+        Ctrl.AlphaFilter='A';
+        Ctrl.BuildQuery();
+        
+        // for Travel
+        Travel__c Travel=new Travel__c(Contact__c=con.id,Type_of_Travel__c='One Way',Journey_Date__c=System.Today(),from__c='Source',TO__c='Desination');
+        Insert Travel;
+        Test.setCurrentPageReference(new PageReference('Page.LookUpPage')); 
+        System.currentPageReference().getParameters().put('type', 'Travel');
+        System.currentPageReference().getParameters().put('AgentID', agent.id);
+        System.currentPageReference().getParameters().put('ObjNm', Commission__c.getSObjectType().getDescribe().getName());
+        LookupValuesCtrl TCtrl=new LookupValuesCtrl();
+        TCtrl.SearchStr = 'A';
+        TCtrl.runQuery();
+        
+        // for Visa
+        
+        Visa__c visa2=new Visa__c(Contact__c=con.id,Passport_Number__c='Test1234',Country__c='Canada');
+        insert visa2;
+        Test.setCurrentPageReference(new PageReference('Page.LookUpPage')); 
+        System.currentPageReference().getParameters().put('type', 'Visa');
+        System.currentPageReference().getParameters().put('AgentID', agent.id);
+        System.currentPageReference().getParameters().put('ObjNm', Commission__c.getSObjectType().getDescribe().getName());
+        LookupValuesCtrl VCtrl=new LookupValuesCtrl();
+        VCtrl.SearchStr = 'A';
+        VCtrl.runQuery();
+        
+        // for university
+        Test.setCurrentPageReference(new PageReference('Page.LookUpPage')); 
+        System.currentPageReference().getParameters().put('type', 'Application');
+        System.currentPageReference().getParameters().put('AgentID', agent.id);
+        System.currentPageReference().getParameters().put('ObjNm',Commission__c.getSObjectType().getDescribe().getName());
+        LookupValuesCtrl UCtrl=new LookupValuesCtrl();
+        UCtrl.SearchStr = 'A';
+        UCtrl.runQuery();
+        //from application
+        Test.setCurrentPageReference(new PageReference('Page.LookUpPage')); 
+        System.currentPageReference().getParameters().put('UniverID',ins.id);     
+        System.currentPageReference().getParameters().put('ObjNm', Application__c.getSObjectType().getDescribe().getName());
+        LookupValuesCtrl ACtrl=new LookupValuesCtrl();
+        ACtrl.SearchStr = 'A';
+        ACtrl.runQuery();
+        //from visa
+        Test.setCurrentPageReference(new PageReference('Page.LookUpPage')); 
+        System.currentPageReference().getParameters().put('ConId',con.id);
+        System.currentPageReference().getParameters().put('type','Application');
+        System.currentPageReference().getParameters().put('ObjNm',Visa__c.getSObjectType().getDescribe().getName());
+        LookupValuesCtrl V2Ctrl=new LookupValuesCtrl();
+        V2Ctrl.SearchStr = 'A';
+        V2Ctrl.runQuery();
+    }
+     static testmethod void ErrorMsg()
+    {
+        //errorOnField
+        Contact con=new contact();
+        ErrorMsg.OnField(con, 'INSERT','email');
+        ErrorMsg.OnField(new Contact(), 'UPDATE','email');
+        //errorOnObject
+        ErrorMsg.OnObject(new Contact(), 'DELETE');
+        ErrorMsg.OnObject(new Contact(), 'UPSERT');
+        system.assert(con!=null);
+    }
+}
+
+
+=================================================End   CurrencySymbolCls========================================================
+
+
+
+=================================================Start   CurrencySymbolCls========================================================
