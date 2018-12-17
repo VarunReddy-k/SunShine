@@ -2,3 +2,4 @@
 
 Sun
 Moon
+Sun+Moon=SunMoon
